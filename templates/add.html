@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Add
+{% endblock %}
+
+{% block main %}
+
+<form action="/add" method="post" class="add">
+  <div class="mb-3">
+    <input autocomplete="off" autofocus class="input"
+     required id="symbol" name="symbol" placeholder="Type " type="text">
+  </div>
+  <div class="mb-3">
+    <input autocomplete="off" class="input" id="shares" required name="shares"
+     placeholder="Amount" type="number">
+  </div>
+  <div >
+    <div class="float_right">
+      <label for="currency"><span class="regular">Currency:</span></label>
+      <select name="currency" id="currency" class="dropdown">
+
+        {%for i in range(0, leng)%}
+        <option value="{{currency_index[i]}}">{{currency_index[i]}}</option>
+        {%endfor%}
+
+      </select>
+    </div>
+  </div>
+  <br>
+  <div class="mb-3">
+    <input autocomplete="off" class="input" id="comment" name="comment"
+     placeholder="Comment" type="text">
+  </div>
+  <button class="button" type="submit">Submit</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends "layout.html" %}
+
+{% block title %}
+History
+{% endblock %}
+
+{% block main %}
+
+{% if edit_mode > 0 %}
+
+<p>Records in database: <span class="imported_value">{{iterations}}</span></p>
+
+{% if iterations > 0 %}
+
+<br>
+<div class="table">
+  <div class="float_right">
+    <label for="currency">Sort by:</label>
+    <select class="dropdown">
+      <option onclick="sortTableDesc(0)">№ DESC</option>
+      <option onclick="sortTableAsc(0)">№ ASC</option>
+      <option onclick="sortTableTypeDesc(1)">type DESC</option>
+      <option onclick="sortTableTypeAsc(1)">type ASC</option>
+      <option onclick="sortTableDesc(2)">amount DESC</option>
+      <option onclick="sortTableAsc(2)">amount ASC</option>
+      <option onclick="sortTableTypeDesc(3)">comment DESC</option>
+      <option onclick="sortTableTypeAsc(3)">comment ASC</option>
+      <option onclick="sortTableTypeDesc(5); sortTableTypeDesc(4)">date DESC</option>
+      <option onclick="sortTableTypeAsc(5); sortTableTypeAsc(4)">date ASC</option>
+      <option onclick="sortTableTypeDesc(6)">currency DESC</option>
+      <option onclick="sortTableTypeAsc(6)">currency ASC</option>
+    </select>
+  </div>
+  <br>
+  <input type="text" autofocus id="myInput" onkeyup="myFunction()"
+   placeholder="Filter by date: 2000-01-01" class="input filter">
+  <br>
+  <form action="/history" method="post">
+    <table class="table" id="myTable">
+      <tr class="table_header">
+        <th >№</th>
+        <th >type</th>
+        <th >amount</th>
+        <th >comment</th>
+        <th >date</th>
+        <th >time</th>
+        <th >currency</th>
+        <th >Edit</th>
+        <th >Delete</th>
+      </tr>
+
+      {% for i in range(0, iterations) %}
+
+      {% if iterations > 0 %}
+
+      <tr class="table_row">
+        <td>{{iterations - i}}</td>
+        <td>{{type[i]}}</td>
+        <td>
+          {{amount[i] | currency(curren[i])}}
+        </td>
+        <td class="allow_wrap">{{comment[i]}}</td>
+        <td>{{date[i]}}</td>
+        <td>{{time[i]}}</td>
+        <td>{{curren[i]}}</td>
+        <td>
+          <button class="button" id="edit" name="edit" value="{{nid[i]}}" type="submit">
+            Edit
+          </button>
+        </td>
+        <td>
+          <button class="button" id="delete" name="delete" value="{{nid[i]}}" type="submit">
+          Delete
+        </button>
+      </td>
+      </tr>
+
+      {% endif %}
+
+      {% endfor %}
+
+    </table>
+  </form>
+</div>
+
+{% else %}
+
+<p>no records so far &#128064;</p>
+
+{% endif %}
+
+{% else %}
+
+<!-- EDIT MODE-->
+<form action="/history" method="post">
+  <table class="table" id="myTable">
+    <tr class="table_header">
+      <th>type</th>
+      <th>amount</th>
+      <th>comment</th>
+      <th>date</th>
+      <th>time</th>
+      <th>currency</th>
+    </tr>
+
+    {% for i in range(0, iterations) %}
+
+    {% if iterations > 0 %}
+
+    <tr class="table_row">
+      <input type="hidden" value="{{nid[i]}}" id="new_id" name="new_id"></input>
+      <td>
+        <input class="input" type="text" id="new_type" name="new_type"  placeholder="{{type[i]}}">
+      </td>
+      <td>
+        <input class="input" type="number" id="new_amount" name="new_amount"
+         placeholder="{{amount[i] | currency(curren[i])}}">
+        </td>
+      <td>
+        <input class="input" type="text"  id="new_comment" name="new_comment"
+         placeholder="{{comment[i]}}">
+      </td>
+      <td class="cell_aligned_vertical">{{date[i]}}</td>
+      <td class="cell_aligned_vertical">{{time[i]}}</td>
+      <td class="cell_aligned_vertical">
+        <select id="new_currency" name="new_currency" class="dropdown">
+
+          {% for i in range(listOfKeys | length) %}
+
+          <option value="{{listOfKeys[i]}}">{{listOfKeys[i]}}</option>
+
+          {% endfor %}
+
+        </select>
+      </td>
+    </tr>
+
+    {% endif %}
+
+    {% endfor %}
+
+  </table>
+  <br>
+  <p>
+    <button class="button" id="submit_changes" name="submit_changes" type="submit">
+      Submit changes
+    </button>
+  </p>
+</form>
+
+{% endif %}
+
+{% endblock %}

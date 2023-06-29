@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Preferences
+{% endblock %}
+
+{% block main %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<p>Base currency for all calculations is USD</p>
+<p>Your default currency: <span class="imported_value">{{cur}}</span></p>
+<p>1 USD = <span class="imported_value">{{ rate | currency(cur)}}</span></p>
+<p>Rate: <span class="imported_value">{{ rate }}</span></p>
+
+<div>
+  <form action="/preferences" method="post">
+    <div>
+      <label for="currency" class="regular">Change currency to:</label>
+      <select class="dropdown" name="currency" id="currency">
+        {%for i in range(listOfKeys | length)%}
+        <option value="{{listOfKeys[i]}}" >{{listOfKeys[i]}}</option>
+        {%endfor%}
+      </select>
+    </div>
+    <br>
+    <button class="button" type="submit">Submit</button>
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Index
+{% endblock %}
+
+{% block main %}
+
+<p>Spent in total: <span class="imported_value">{{total | currency(cur)}}</span></p>
+
+{% if iterations > 0 %}
+
+<canvas id="myChart" class="table"></canvas>
+
+<script>
+  var x, y;
+  var xValues = [];
+  var yValues = [];
+  var barColors = [];
+  {%for i in range(0, iterations) %}
+    x = ('{{type[i] | string}}');
+    xValues.push(x);
+    y = ('{{amount[i] | int}}');
+    yValues.push(y);
+    d = ('{{hexColorList[i]}}')
+    barColors.push(d);
+  {%endfor%}
+
+  // external chart script
+  new Chart("myChart", {
+    type: "doughnut",
+    data: {
+      labels: xValues,
+      datasets: [{
+        backgroundColor : barColors,
+        data : yValues
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        fontColor: "#21688f",
+        text: "Expenses by type diagram",
+        fontSize: 20,
+      }
+    }
+  });
+</script>
+
+<br>
+<table class="table">
+  <tr class="table_header">
+    <th >№</th>
+    <th >type</th>
+    <th >amount</th>
+  </tr>
+  {%for i in range(0, iterations)%}
+    {% if iterations > 0 %}
+      <tr style="background-color: {{hexColorList[i]}}; opacity: 0.8; border-bottom:1px solid #000000; height: 40px; border-spacing: 10px; ">
+        <td>{{i + 1}}</td>
+        <td>{{type[i]}}</td>
+        <td>{{amount[i] | currency(cur)}}</td>
+      </tr>
+    {% endif %}
+  {%endfor%}
+</table>
+
+{% else %}
+
+<p>no records so far &#128064;</p>
+
+{% endif %}
+
+{% endblock %}
